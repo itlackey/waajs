@@ -1,0 +1,96 @@
+{
+    "title": "Example Game",
+    "difficulty": 0,
+    "categories": [
+        {
+            "name": "Systems",
+            "tasks": [
+                {
+                    "id": 1.1,
+                    "title": "Found a portal, now to open it...",
+                    "failureScore": 0
+                },
+                {
+                    "id": 1.2,
+                    "title": "Lost your pen, your screwed!",
+                    "failureScore": 2
+                },
+                {
+                    "id": 1.3,
+                    "title": "Found a paper clip",
+                    "failureScore": 0
+                }
+            ]
+        },
+        {
+            "name": "Health",
+            "tasks": [
+                {
+                    "id": 2.1,
+                    "title": "Ate an apple",
+                    "failureScore": 0
+                },
+                {
+                    "id": 2.2,
+                    "title": "Ate a poison apple",
+                    "failureScore": 2
+                },
+                {
+                    "id": 2.3,
+                    "title": "Found a bit of granola in your pocket",
+                    "failureScore": 0
+                }
+            ]
+        },
+        {
+            "name": "Friends",
+            "tasks": [
+                {
+                    "id": 3.1,
+                    "title": "Ran into Ralph",
+                    "failureScore": 0
+                },
+                {
+                    "id": 3.2,
+                    "title": "Lost Ralph",
+                    "failureScore": 2
+                },
+                {
+                    "id": 3.3,
+                    "title": "Neighbor kid said hi",
+                    "failureScore": 0
+                },
+                {
+                    "id": 3.4,
+                    "title": "Cat ran away",
+                    "failureScore": 1
+                }
+            ]
+        },
+        {
+            "name": "Enemies",
+            "tasks": [
+                {
+                    "id": 4.1,
+                    "title": "Daemon has been idle",
+                    "failureScore": 0
+                },
+                {
+                    "id": 4.2,
+                    "title": "Daemon has sent out scouting parties",
+                    "failureScore": 2
+                },
+                {
+                    "id": 4.3,
+                    "title": "Sysops yearly meeting is tonight, they should be distracted",
+                    "failureScore": 0
+                },
+                {
+                    "id": 4.4,
+                    "title": "Sysops recruit is tailing you",
+                    "failureScore": 1
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "dimm-city-rpg",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^8.2.0",
+    "mocha": "^9.2.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "nyc": "^15.1.0"
+  }
+}

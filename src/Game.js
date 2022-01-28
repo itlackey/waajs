@@ -45,7 +45,7 @@ class Game {
         };
         this.currentRound++;
 
-        if (this.previousTasks.some((t) => t.id === 1.1)) {
+        if (this.previousTasks.some((t) => t.id === "1.1")) {
             result.successRoll = this.rollD6();
             if (result.successRoll === 6) this.successCounter++;
         }

@@ -1,7 +1,7 @@
 const { assert } = require("chai");
 const TaskSelector = require("../src/TaskSelector");
 
-const exampleGameConfig = require("./ExampleGame.json");
+const exampleGameConfig = require("./GameTemplate.json"); // require("./ExampleGame.json");
 
 describe("TaskSelector", () => {
 

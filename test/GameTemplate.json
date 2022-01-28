@@ -1,0 +1,78 @@
+{
+    "title": "Game Template",
+    "difficulty": 0,
+    "categories": [
+        {
+            "name": "Category 1",
+            "tasks": [
+                { "id": "1.1", "title": "Task 1.1", "failureScore": 0 },
+                { "id": "1.2", "title": "Task 1.2", "failureScore": 1 },
+                { "id": "1.3", "title": "Task 1.3", "failureScore": 0 },
+                { "id": "1.4", "title": "Task 1.4", "failureScore": 1 },
+                { "id": "1.5", "title": "Task 1.5", "failureScore": 0 },
+                { "id": "1.6", "title": "Task 1.6", "failureScore": 1 },
+                { "id": "1.7", "title": "Task 1.7", "failureScore": 0 },
+                { "id": "1.8", "title": "Task 1.8", "failureScore": 1 },
+                { "id": "1.9", "title": "Task 1.9", "failureScore": 0 },
+                { "id": "1.10", "title": "Task 1.10", "failureScore": 1 },
+                { "id": "1.11", "title": "Task 1.11", "failureScore": 0 },
+                { "id": "1.12", "title": "Task 1.12", "failureScore": 1 },
+                { "id": "1.13", "title": "Task 1.13", "failureScore": 0 }
+            ]
+        },
+        {
+            "name": "Category 2",
+            "tasks": [
+                { "id": "2.1", "title": "Task 2.1", "failureScore": 0 },
+                { "id": "2.2", "title": "Task 2.2", "failureScore": 1 },
+                { "id": "2.3", "title": "Task 2.3", "failureScore": 0 },
+                { "id": "2.4", "title": "Task 2.4", "failureScore": 1 },
+                { "id": "2.5", "title": "Task 2.5", "failureScore": 0 },
+                { "id": "2.6", "title": "Task 2.6", "failureScore": 1 },
+                { "id": "2.7", "title": "Task 2.7", "failureScore": 0 },
+                { "id": "2.8", "title": "Task 2.8", "failureScore": 1 },
+                { "id": "2.9", "title": "Task 2.9", "failureScore": 0 },
+                { "id": "2.10", "title": "Task 2.10", "failureScore": 1 },
+                { "id": "2.11", "title": "Task 2.11", "failureScore": 0 },
+                { "id": "2.12", "title": "Task 2.12", "failureScore": 1 },
+                { "id": "2.13", "title": "Task 2.13", "failureScore": 0 }
+            ]
+        },
+        {
+            "name": "Category 3",
+            "tasks": [
+                { "id": "3.1", "title": "Task 3.1", "failureScore": 0 },
+                { "id": "3.2", "title": "Task 3.2", "failureScore": 1 },
+                { "id": "3.3", "title": "Task 3.3", "failureScore": 0 },
+                { "id": "3.4", "title": "Task 3.4", "failureScore": 1 },
+                { "id": "3.5", "title": "Task 3.5", "failureScore": 0 },
+                { "id": "3.6", "title": "Task 3.6", "failureScore": 1 },
+                { "id": "3.7", "title": "Task 3.7", "failureScore": 0 },
+                { "id": "3.8", "title": "Task 3.8", "failureScore": 1 },
+                { "id": "3.9", "title": "Task 3.9", "failureScore": 0 },
+                { "id": "3.10", "title": "Task 3.10", "failureScore": 1 },
+                { "id": "3.11", "title": "Task 3.11", "failureScore": 0 },
+                { "id": "3.12", "title": "Task 3.12", "failureScore": 1 },
+                { "id": "3.13", "title": "Task 3.13", "failureScore": 0 }
+            ]
+        },
+        {
+            "name": "Category 4",
+            "tasks": [
+                { "id": "4.1", "title": "Task 4.1", "failureScore": 0 },
+                { "id": "4.2", "title": "Task 4.2", "failureScore": 1 },
+                { "id": "4.3", "title": "Task 4.3", "failureScore": 0 },
+                { "id": "4.4", "title": "Task 4.4", "failureScore": 1 },
+                { "id": "4.5", "title": "Task 4.5", "failureScore": 0 },
+                { "id": "4.6", "title": "Task 4.6", "failureScore": 1 },
+                { "id": "4.7", "title": "Task 4.7", "failureScore": 0 },
+                { "id": "4.8", "title": "Task 4.8", "failureScore": 1 },
+                { "id": "4.9", "title": "Task 4.9", "failureScore": 0 },
+                { "id": "4.10", "title": "Task 4.10", "failureScore": 1 },
+                { "id": "4.11", "title": "Task 4.11", "failureScore": 0 },
+                { "id": "4.12", "title": "Task 4.12", "failureScore": 1 },
+                { "id": "4.13", "title": "Task 4.13", "failureScore": 0 }
+            ]
+        }
+    ]
+}

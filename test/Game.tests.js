@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const Game = require("../src/Game");
-const exampleGameConfig = require("./ExampleGame.json");
+const exampleGameConfig = require("./GameTemplate.json");
 
 describe("GameEngine", () => {
     describe("Starting game", () => {
@@ -8,7 +8,7 @@ describe("GameEngine", () => {
             const game = new Game(exampleGameConfig);
             await game.init();
 
-            assert.equal("Example Game", game.config.title, "Title should be set in config");
+            assert.equal(exampleGameConfig.title, game.config.title, "Title should be set in config");
             assert.equal(-1, game.currentRound, "Should not be set");
             assert.equal(-1, game.currentPhase, "Should not be set");
             assert.equal(-1, game.successCounter, "Success meter should not be set");
@@ -19,7 +19,7 @@ describe("GameEngine", () => {
             const game = new Game(exampleGameConfig);
             await game.init();
             game.startGame();
-            assert.equal("Example Game", game.config.title, "Title should be set in config");
+            assert.equal(exampleGameConfig.title, game.config.title, "Title should be set in config");
             assert.equal(1, game.currentRound, "Should not be the first round");
             assert.equal(0, game.currentPhase, "Should be task phase");
             assert.isAtLeast(game.successCounter, 0, "Success meter should be reset");
@@ -34,13 +34,14 @@ describe("GameEngine", () => {
             let tasks = game.startGame();
 
             assert.isTrue(
-                tasks.currentTasks.some((t) => t.id == 1.1),
+                tasks.currentTasks.some((t) => t.id === "1.1"),
                 "Task 0 should be selected"
             );
-            assert.isFalse(
-                game.taskSelector.availableTasks.some((t) => t.id == 1.1),
-                "It should remove this first task from the available tasks"
-            );
+            const containsFirstTask = game.taskSelector.availableTasks.some((t) => {
+                let matches = t.id === "1.1";
+                return matches;
+            });
+            assert.equal(containsFirstTask, false, "It should remove this first task from the available tasks");
         });
     });
 
@@ -103,7 +104,7 @@ describe("GameEngine", () => {
             game.startGame();
             do {
                 let tasks = game.beginRound();
-                
+
                 assert.isTrue(
                     game.failureCounter == 0 ||
                         game.successCounter == 10 ||

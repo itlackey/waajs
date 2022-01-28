@@ -1,5 +1,5 @@
 const { d6, d20, roll } = require("./Dice");
-
+//ToDo: rename to "Deck"
 class TaskSelector {
     constructor(availableTasks = []) {
         this.availableTasks = availableTasks; // this.config.categories.flatMap((c) => c.tasks); //4 * 13

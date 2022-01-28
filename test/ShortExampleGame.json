@@ -1,0 +1,36 @@
+{
+    "title": "Short Example Game",
+    "difficulty": 0,
+    "categories": [
+        {
+            "name": "Systems",
+            "tasks": [
+                {
+                    "id": 1.1,
+                    "title": "Found a portal, now to open it...",
+                    "failureScore": 0
+                },
+                {
+                    "id": 1.2,
+                    "title": "Lost your pen, your screwed!",
+                    "failureScore": 1
+                }
+            ]
+        },
+        {
+            "name": "Health",
+            "tasks": [
+                {
+                    "id": 2.1,
+                    "title": "Ate an apple",
+                    "failureScore": 0
+                },
+                {
+                    "id": 2.2,
+                    "title": "Ate a poison apple",
+                    "failureScore": 1
+                }
+            ]
+        }
+    ]
+}

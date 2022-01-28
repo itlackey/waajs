@@ -4,15 +4,28 @@ const exampleGameConfig = require("./ExampleGame.json");
 
 describe("GameEngine", () => {
     describe("Starting game", () => {
-        it("should initialize a new game", async () => {
+        it("should initialize game engine", async () => {
             const game = new Game(exampleGameConfig);
             await game.init();
 
             assert.equal("Example Game", game.config.title, "Title should be set in config");
-            assert.equal(1, game.currentRound, "Should be the first round");
+            assert.equal(-1, game.currentRound, "Should not be set");
+            assert.equal(-1, game.currentPhase, "Should not be set");
+            assert.equal(-1, game.successCounter, "Success meter should not be set");
+            assert.equal(-1, game.failureCounter, "Failure counter should not be set");
+        });
+
+        it("should start a new game", async () => {
+            const game = new Game(exampleGameConfig);
+            await game.init();
+            game.startGame();
+            assert.equal("Example Game", game.config.title, "Title should be set in config");
+            assert.equal(1, game.currentRound, "Should not be the first round");
             assert.equal(0, game.currentPhase, "Should be task phase");
-            assert.equal(0, game.successCounter, "Success meter should be reset");
-            assert.isAbove(game.failureCounter, -1, "Failure counter should be reset, and baseline set");
+            assert.isAtLeast(game.successCounter, 0, "Success meter should be reset");
+            assert.isAtMost(game.successCounter, 1, "Success meter should be reset");
+            assert.isAtLeast(game.failureCounter, 0, "Failure counter should be reset");
+            assert.isAtMost(game.failureCounter, 100, "Failure counter should be reset");
         });
 
         it("should set the first task as the win task if mode is easy", async () => {
@@ -20,18 +33,110 @@ describe("GameEngine", () => {
             await game.init();
             let tasks = game.startGame();
 
-            assert.isTrue(tasks.currentTasks.some((t) => t.id == 1.1), "Task 0 should be selected");
-            assert.isFalse(game.taskSelector.availableTasks.some((t) => t.id == 1.1), "It should remove this first task from the available tasks");
+            assert.isTrue(
+                tasks.currentTasks.some((t) => t.id == 1.1),
+                "Task 0 should be selected"
+            );
+            assert.isFalse(
+                game.taskSelector.availableTasks.some((t) => t.id == 1.1),
+                "It should remove this first task from the available tasks"
+            );
         });
     });
 
-    describe('Playing a round', async () => {
-        it('should not reuse tasks between rounds', async () => {
+    describe("Playing a round", async () => {
+        it("should not reuse tasks between rounds", async () => {
             const game = new Game(exampleGameConfig);
             await game.init();
-            let tasks = game.startGame();
+            let selectedTasks = game.startGame();
 
+            let currentTasks = game.beginRound();
+            while (currentTasks.length > 0) {
+                assert.isFalse(
+                    selectedTasks.some((st) => currentTasks.some((ct) => ct.id === st.id)),
+                    "should not reuse tasks"
+                );
+            }
+        });
+        it("should eliminate a failure counter when a 1 is rolled", () => {
+            const game = new Game(exampleGameConfig);
+            game.rollD6 = () => 1;
+            let result = game.calculateFailureScore(10, [
+                {
+                    failureScore: 1,
+                },
+            ]);
 
+            assert.equal(result, 0);
+        });
+
+        it("should not eliminate a failure counter when the roll is greater than 1", () => {
+            const game = new Game(exampleGameConfig);
+            game.rollD6 = () => 2;
+            let result = game.calculateFailureScore(10, [
+                {
+                    failureScore: 1,
+                },
+            ]);
+
+            assert.equal(result, 10);
+        });
+
+        it("should not allow a failure counter less than 0", () => {
+            const game = new Game(exampleGameConfig);
+            game.init();
+            game.startGame();
+            let testing = true;
+            while (testing) {
+                game.beginRound();
+                assert.isAtLeast(game.failureCounter, 0, "failure counter should not be less than 0");
+                testing = game.failureCounter > 0;
+            }
+            assert.isAtLeast(game.failureCounter, 0, "failure counter should not be less than 0");
+        });
+    });
+
+    describe("Winning", () => {
+        it("player should win if the desk runs out", () => {
+            const game = new Game(require("./ShortExampleGame.json"));
+            game.init();
+            game.startGame();
+            do {
+                let tasks = game.beginRound();
+                
+                assert.isTrue(
+                    game.failureCounter == 0 ||
+                        game.successCounter == 10 ||
+                        game.taskSelector.availableTasks.length > 0,
+                    "success counter should be set to 10 if out of cards"
+                );
+            } while (
+                game.failureCounter > 0 &&
+                game.successCounter < 10 &&
+                game.taskSelector.availableTasks.length > 1
+            );
+        });
+
+        it("should calculate failure rate each round", () => {
+            // const game = new Game(exampleGameConfig);
+            // game.init();
+            // game.startGame();
+            // let testing = true;
+            // while (testing) {
+            //     game.beginRound();
+            //     assert.isAtLeast(game.failureCounter, 0, "failure counter should not be less than 0");
+            //     testing = game.failureCounter > 0;
+            // }
+            // assert.isAtLeast(game.failureCounter, 0, "failure counter should not be less than 0");
+        });
+
+        it("should calculate success rate when 1.1 card is held", () => {
+            const game = new Game(exampleGameConfig);
+            game.init();
+            game.startGame();
+            game.rollD6 = () => 6;
+            game.beginRound();
+            assert.equal(game.successCounter, 1, "should have a success counter after rolling a six");
         });
     });
 });

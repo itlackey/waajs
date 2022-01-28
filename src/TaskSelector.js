@@ -1,9 +1,8 @@
 const { d6, d20, roll } = require("./Dice");
 
 class TaskSelector {
-    constructor(config) {
-        this.config = config;
-        this.availableTasks = this.config.categories.flatMap((c) => c.tasks); //4 * 13
+    constructor(availableTasks = []) {
+        this.availableTasks = availableTasks; // this.config.categories.flatMap((c) => c.tasks); //4 * 13
         this.allTasks = [...this.availableTasks];
 
     }   

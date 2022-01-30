@@ -9,10 +9,10 @@ describe("GameEngine", () => {
             await game.init();
 
             assert.equal(exampleGameConfig.title, game.config.title, "Title should be set in config");
-            assert.equal(-1, game.currentRound, "Should not be set");
-            assert.equal(-1, game.currentPhase, "Should not be set");
-            assert.equal(-1, game.successCounter, "Success meter should not be set");
-            assert.equal(-1, game.failureCounter, "Failure counter should not be set");
+            assert.equal(-1, game.state.currentRound, "Should not be set");
+            assert.equal(-1, game.state.currentPhase, "Should not be set");
+            assert.equal(-1, game.state.successCounter, "Success meter should not be set");
+            assert.equal(-1, game.state.failureCounter, "Failure counter should not be set");
         });
 
         it("should start a new game", async () => {
@@ -20,12 +20,12 @@ describe("GameEngine", () => {
             await game.init();
             game.startGame();
             assert.equal(exampleGameConfig.title, game.config.title, "Title should be set in config");
-            assert.equal(1, game.currentRound, "Should not be the first round");
-            assert.equal(0, game.currentPhase, "Should be task phase");
-            assert.isAtLeast(game.successCounter, 0, "Success meter should be reset");
-            assert.isAtMost(game.successCounter, 1, "Success meter should be reset");
-            assert.isAtLeast(game.failureCounter, 0, "Failure counter should be reset");
-            assert.isAtMost(game.failureCounter, 100, "Failure counter should be reset");
+            assert.equal(1, game.state.currentRound, "Should not be the first round");
+            assert.equal(0, game.state.currentPhase, "Should be task phase");
+            assert.isAtLeast(game.state.successCounter, 0, "Success meter should be reset");
+            assert.isAtMost(game.state.successCounter, 1, "Success meter should be reset");
+            assert.isAtLeast(game.state.failureCounter, 0, "Failure counter should be reset");
+            assert.isAtMost(game.state.failureCounter, 100, "Failure counter should be reset");
         });
 
         it("should set the first task as the win task if mode is easy", async () => {
@@ -90,10 +90,10 @@ describe("GameEngine", () => {
             let testing = true;
             while (testing) {
                 game.beginRound();
-                assert.isAtLeast(game.failureCounter, 0, "failure counter should not be less than 0");
-                testing = game.failureCounter > 0;
+                assert.isAtLeast(game.state.failureCounter, 0, "failure counter should not be less than 0");
+                testing = game.state.failureCounter > 0;
             }
-            assert.isAtLeast(game.failureCounter, 0, "failure counter should not be less than 0");
+            assert.isAtLeast(game.state.failureCounter, 0, "failure counter should not be less than 0");
         });
     });
 
@@ -137,7 +137,7 @@ describe("GameEngine", () => {
             game.startGame();
             game.rollD6 = () => 6;
             game.beginRound();
-            assert.equal(game.successCounter, 1, "should have a success counter after rolling a six");
+            assert.equal(game.state.successCounter, 1, "should have a success counter after rolling a six");
         });
     });
 });

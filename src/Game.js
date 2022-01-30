@@ -1,5 +1,6 @@
 const TaskSelector = require("./TaskSelector");
 const { d6 } = require("./Dice");
+const State = require('./State');
 const Phases = {
     Tasks: 0,
     Logging: 1,
@@ -8,13 +9,9 @@ const Phases = {
 class Game {
     constructor(config, currentState = null) {
         this.config = config;
+        this.state = new State(currentState);
         this.taskSelector = new TaskSelector(this.config.categories.flatMap((c) => c.tasks));
-        this.currentRound = -1;
-        this.currentPhase = -1;
-        this.successCounter = -1;
-        this.failureCounter = -1;
-        this.currentTasks = [];
-        this.previousTasks = [];
+      
     }
 
     init() {
@@ -25,15 +22,15 @@ class Game {
         return d6();
     }
     startGame() {
-        this.currentRound = 1;
-        this.successCounter = 0;
-        this.failureCounter = 100;
-        this.currentPhase = Phases.Tasks;
-        this.currentTasks = this.taskSelector.getTasksForFirstRound(this.config.difficulty);
-        this.failureCounter = this.calculateFailureScore(this.failureCounter, this.currentTasks);
-        this.previousTasks = [...this.currentTasks];
+        this.state.currentRound = 1;
+        this.state.successCounter = 0;
+        this.state.failureCounter = 100;
+        this.state.currentPhase = Phases.Tasks;
+        this.state.currentTasks = this.taskSelector.getTasksForFirstRound(this.config.difficulty);
+        this.state.failureCounter = this.calculateFailureScore(this.state.failureCounter, this.state.currentTasks);
+        this.state.previousTasks = [...this.state.currentTasks];
         return {
-            currentTasks: this.currentTasks,
+            currentTasks: this.state.currentTasks,
         };
     }
 
@@ -43,33 +40,33 @@ class Game {
             failureScore: 0,
             currentTasks: [],
         };
-        this.currentRound++;
+        this.state.currentRound++;
 
-        if (this.previousTasks.some((t) => t.id === "1.1")) {
+        if (this.state.previousTasks.some((t) => t.id === "1.1")) {
             result.successRoll = this.rollD6();
-            if (result.successRoll === 6) this.successCounter++;
+            if (result.successRoll === 6) this.state.successCounter++;
         }
 
         if (this.taskSelector.availableTasks.length === 0) {
-            this.successCounter = 10;
-            this.currentTasks = [];
+            this.state.successCounter = 10;
+            this.state.currentTasks = [];
         } else {
-            this.currentTasks = this.taskSelector.getTasksForRound();
-            this.previousTasks = [...this.previousTasks, ...this.currentTasks];
+            this.state.currentTasks = this.taskSelector.getTasksForRound();
+            this.state.previousTasks = [...this.state.previousTasks, ...this.state.currentTasks];
         }
 
-        if (this.successCounter === 10) {
+        if (this.state.successCounter === 10) {
             //Final roll before winning
-            this.failureCounter = this.calculateFailureScore(this.failureCounter, [
+            this.state.failureCounter = this.calculateFailureScore(this.state.failureCounter, [
                 {
                     failureScore: 1,
                 },
             ]);
         } else {
-            this.failureCounter = this.calculateFailureScore(this.failureCounter, this.currentTasks);
+            this.state.failureCounter = this.calculateFailureScore(this.state.failureCounter, this.state.currentTasks);
         }
 
-        result.currentTasks = this.currentTasks;
+        result.currentTasks = this.state.currentTasks;
 
         return result;
     }

@@ -16,15 +16,15 @@ function getStatus() {
     console.log("");
     let failureMeter = "";
     let successMeter = "";
-    for (let index = 0; index < game.failureCounter / 10; index++) {
+    for (let index = 0; index < game.state.failureCounter / 10; index++) {
         failureMeter += "🍀";
     }
-    for (let index = 0; index < game.successCounter; index++) {
+    for (let index = 0; index < game.state.successCounter; index++) {
         successMeter += "⭐";
     }
     successMeter = successMeter || "😴";
 
-    return `Progress: ${successMeter} | Luck: ${failureMeter} | Total Actions: ${game.previousTasks.length} / ${game.taskSelector.allTasks.length}\n`;
+    return `Progress: ${successMeter} | Luck: ${failureMeter} | Total Actions: ${game.state.previousTasks.length} / ${game.taskSelector.allTasks.length}\n`;
 }
 
 async function main() {
@@ -32,31 +32,31 @@ async function main() {
 
     result = game.startGame();
 
-    console.log("Scene", game.currentRound);
-    console.log(game.currentTasks.length, `Actions:`);
+    console.log("Scene", game.state.currentRound);
+    console.log(game.state.currentTasks.length, `Actions:`);
     console.log(result.currentTasks.map((t) => "\t" + t.title).join("\n"));
     ui.updateBottomBar(getStatus());
     let c = await inquirer.prompt(continueQuestion);
 
-    while (c.playing && game.successCounter < 10 && game.failureCounter > 0) {
+    while (c.playing && game.state.successCounter < 10 && game.state.failureCounter > 0) {
         result = game.beginRound();
         console.log("Scene", game.currentRound);
-        console.log(game.currentTasks.length, `Actions:`);
+        console.log(game.state.currentTasks.length, `Actions:`);
         console.log(result.currentTasks.map((t) => "\t" + t.title).join("\n"));
         ui.updateBottomBar(getStatus());
         game.endRound();
-        if (game.failureCounter <= 0 || game.successCounter >= 10) c = { playing: false };
+        if (game.state.failureCounter <= 0 || game.state.successCounter >= 10) c = { playing: false };
         else c = await inquirer.prompt(continueQuestion);
     }
 
 
     if (game.failureCounter <= 0) {
         console.log("You lose");
-    } else if (game.successCounter >= 10) {
+    } else if (game.state.successCounter >= 10) {
         console.log("You win");
     } else {
         console.log("We'll call it a draw");
     }
-    console.log(`Scores: ${game.successCounter} | ${game.failureCounter}`);
+    console.log(`Scores: ${game.state.successCounter} | ${game.state.failureCounter}`);
 }
 main();

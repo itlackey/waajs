@@ -1,17 +1,20 @@
-const Game = require("./src/Game");
 const inquirer = require("inquirer");
 const BottomBar = require("inquirer/lib/ui/bottom-bar");
 const ui = new BottomBar({ bottomBar: "Establishing connection...\n" });
-const continueQuestion = {
-    type: "confirm",
-    message: "Continue",
-    name: "playing",
-};
+const Game = require("./src/Game");
+const game = new Game();
 
-let gamePath = process.argv[2] || "./test/ExampleGame.json";
-const exampleConfig = require(gamePath);
-const game = new Game(exampleConfig);
-
+function getJournalPrompt(task) {
+    return {
+        type: "input",
+        name: task.id,
+        message: task.title,
+        validate: (input) => {
+            if (!input) return "Required";
+            return true;
+        },
+    };
+}
 function getStatus() {
     console.log("");
     let failureMeter = "";
@@ -27,36 +30,46 @@ function getStatus() {
     return `Progress: ${successMeter} | Luck: ${failureMeter} | Total Actions: ${game.state.previousTasks.length} / ${game.taskSelector.allTasks.length}\n`;
 }
 
-async function main() {
-    game.init();
-
-    result = game.startGame();
-
-    console.log("Scene", game.state.currentRound);
-    console.log(game.state.currentTasks.length, `Actions:`);
-    console.log(result.currentTasks.map((t) => "\t" + t.title).join("\n"));
+async function main(gamePath) {    
+    const gameConfig = require(gamePath);
+    await game.startGame(gameConfig);
     ui.updateBottomBar(getStatus());
-    let c = await inquirer.prompt(continueQuestion);
-
-    while (c.playing && game.state.successCounter < 10 && game.state.failureCounter > 0) {
+    while (
+        game.taskSelector.availableTasks.length > 0 &&
+        game.state.successCounter < 10 &&
+        game.state.failureCounter > 0
+    ) {
         result = game.beginRound();
-        console.log("Scene", game.currentRound);
-        console.log(game.state.currentTasks.length, `Actions:`);
-        console.log(result.currentTasks.map((t) => "\t" + t.title).join("\n"));
+        console.log("Scene", game.state.currentRound);
+        console.log("");
+
+        for (let index = 0; index < result.currentTasks.length; index++) {
+            const task = result.currentTasks[index];
+            await inquirer.prompt(getJournalPrompt(task)).then((answer) => {
+                task.journalEntry = {
+                    id: task.id,
+                    text: answer[task.id],
+                };
+            });
+        }
+
         ui.updateBottomBar(getStatus());
-        game.endRound();
-        if (game.state.failureCounter <= 0 || game.state.successCounter >= 10) c = { playing: false };
-        else c = await inquirer.prompt(continueQuestion);
+        game.endRound(result.currentTasks.filter((t) => t.journalEntry).map((t) => t.journalEntry));
     }
 
+    game.state.previousTasks.forEach((t) => {
+        if (t.journalEntry) console.log(`${t.title}:`, t.journalEntry.text);
+        else console.log(`${t.title}:`, "missing entry");
+    });
 
-    if (game.failureCounter <= 0) {
-        console.log("You lose");
+    if (game.state.failureCounter <= 0) {
+        console.log(game.config.lossMessage || "Ran out of luck this time...");
     } else if (game.state.successCounter >= 10) {
-        console.log("You win");
+        console.log(game.config.winMessage || "Great success!");
     } else {
-        console.log("We'll call it a draw");
+        console.log(game.config.drawMessage || "Right, we'll call it a draw");
     }
-    console.log(`Scores: ${game.state.successCounter} | ${game.state.failureCounter}`);
+    console.log(`${game.state.successCounter * 10}% success | ${100 - game.state.failureCounter}% failure`);
 }
-main();
+
+main(process.argv[2] || "./test/ExampleGame.json");

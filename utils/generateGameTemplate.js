@@ -50,5 +50,6 @@ const partialGame = {
         },
     ],
 };
+//ToDo: support loading from CSV?
 let results = generate({});
 console.log(JSON.stringify(results));

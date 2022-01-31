@@ -1,6 +1,6 @@
 const { assert } = require("chai");
 const Game = require("../src/Game");
-const exampleGameConfig = require("./GameTemplate.json");
+const exampleGameConfig = require("../games/GameTemplate.json");
 
 describe("GameEngine", () => {
     describe("Starting game", () => {
@@ -29,16 +29,21 @@ describe("GameEngine", () => {
         it("should set the first task as the win task if mode is easy", async () => {
             const game = new Game();
             await game.startGame(exampleGameConfig);
-            let tasks = await game.beginRound();
+            //let tasks = 
+            await game.beginRound();
             assert.isTrue(
-                tasks.currentTasks.some((t) => t.id === "1.1"),
+                game.state.currentTasks.some((t) => t.id === "1.1"),
                 "Task 0 should be selected"
             );
-            const containsFirstTask = game.taskSelector.availableTasks.some((t) => {
+
+            await game.endRound({text: "test"});
+
+            const containsFirstTask = game.state.availableTasks.some((t) => {
                 let matches = t.id === "1.1";
                 return matches;
             });
             assert.equal(containsFirstTask, false, "It should remove this first task from the available tasks");
+            assert.equal(game.taskSelector.allTasks.length, 52, "All tasks list should not change");
         });
     });
 
@@ -47,22 +52,22 @@ describe("GameEngine", () => {
             const game = new Game();
             await game.startGame(exampleGameConfig);
 
-            let selectedTasks = await game.beginRound();
-            let entries = selectedTasks.currentTasks.map((t) => {
-                return {
-                    id: t.id,
-                    text: "test",
-                };
+            await game.beginRound();
+            // let entries = game.state.currentTasks.map((t) => {
+            //     return {
+            //         id: t.id,
+            //         text: "test",
+            //     };
+            // });
+            await  game.endRound({
+                text: "test",
             });
-            await  game.endRound(entries);
 
-            let results =await  game.beginRound();
-            //while (results.currentTasks.length > 0) {
+            let results = await  game.beginRound();
             assert.isFalse(
-                selectedTasks.currentTasks.some((st) => results.currentTasks.some((ct) => ct.id === st.id)),
+                game.state.completedTasks.some((st) => game.state.currentTasks.some((ct) => ct.id === st.id)),
                 "should not reuse tasks"
             );
-            // }
         });
    
 
@@ -82,15 +87,15 @@ describe("GameEngine", () => {
     describe("Winning", () => {
         it("game should end in a tie if the desk runs out", async () => {
             const game = new Game();
-            await game.startGame(require("./ShortExampleGame.json"));
+            await game.startGame(require("../games/ShortExampleGame.json"));
             game.rollDice = () => 2;
             do {
                 await  game.beginRound();
-            } while (game.taskSelector.availableTasks.length >= 1);
+            } while (game.state.availableTasks.length >= 1);
 
             assert.isTrue(game.state.successCounter < 10, "Game should not have been won");
             assert.isTrue(game.state.primaryFailureCounter > 0, "Game should not have been lost");
-            assert.isTrue(game.taskSelector.availableTasks.length === 0, "should be out of cards");
+            assert.isTrue(game.state.availableTasks.length === 0, "should be out of cards");
         });
 
         it("should calculate failure rate each round", () => {

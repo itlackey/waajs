@@ -10,7 +10,7 @@ class Game {
         this.state = new State();
         this.taskSelector = null;
         this.PrimaryFailureCheck = require("./Actions/PrimaryFailureCheck");
-        this.SuccessCheck = require('./Actions/SuccessCheck');
+        this.SuccessCheck = require("./Actions/SuccessCheck");
     }
 
     rollDice(max) {
@@ -27,22 +27,17 @@ class Game {
             this.state.secondaryFailureCounter = 0;
         }
         const TaskSelector = require(config.taskSelector || "./TaskSelector");
-        this.taskSelector = new TaskSelector(this.config.categories.flatMap((c) => c.tasks));
+        this.taskSelector = new TaskSelector(this.config, this.state); //this.config.categories.flatMap((c) => c.tasks));
     }
 
     async beginRound() {
-        
         this.state.currentRound++;
         this.state.currentPhase = Phases.Tasks;
 
-        if (this.taskSelector.availableTasks.length === 0) {
+        if (this.state.availableTasks.length === 0) {
             this.state.currentTasks = [];
         } else {
-            if (this.state.currentRound === 1)
-                this.state.currentTasks = this.taskSelector.getTasksForFirstRound(this.config.difficulty);
-            else this.state.currentTasks = this.taskSelector.getTasksForRound();
-
-            this.state.previousTasks = [...this.state.previousTasks, ...this.state.currentTasks];
+            this.state.currentTasks = this.taskSelector.getTasksForRound();
         }
 
         if (this.state.successCounter === 10 || this.state.currentTasks.length === 0) {
@@ -50,7 +45,6 @@ class Game {
             this.PrimaryFailureCheck.run(this.state);
         }
 
-     
         for (let index = 0; index < this.state.currentTasks.length; index++) {
             const task = this.state.currentTasks[index];
 
@@ -67,28 +61,28 @@ class Game {
                 }
             }
 
-            if (typeof task.action === "function") task.action(this.state);
-            else if (typeof task.action === "object" && typeof task.action.run === "function")
-                task.action.run(this.state);
+            if (task.action != null) {
+                if (typeof task.action === "function") task.action(this.state);
+                else if (typeof task.action === "object" && typeof task.action.run === "function")
+                    task.action.run(this.state);
+            }
+
+            task.roundCompleted = this.state.currentRound;
         }
     }
 
-    endRound(journalEntries) {
-        if (
-            journalEntries == null &&
-            this.state.currentTasks.some((t) => t.journalEntry == null || t.journalEntry.text == null)
-        ) {
+    endRound(journalEntry) {
+        if (journalEntry == null || journalEntry.text == null) {
             throw new Error("No journal entries provided for this round");
         }
-        if (!journalEntries || journalEntries.length !== this.state.currentTasks.length)
-            throw new Error("Missing one or more journal entries");
 
-        journalEntries.forEach((e) => {
-            const i = this.state.currentTasks.findIndex((t) => t.id === e.id);
-            this.state.currentTasks[i].journalEntry = e;
-        });
-       
+        journalEntry.round = this.state.currentRound;
+        journalEntry.dateRecorded = journalEntry.dateRecorded || new Date().toISOString();
+
+        this.state.journalEntries.push(journalEntry);
         this.SuccessCheck.run(this.state);
+        this.state.completedTasks = [...this.state.completedTasks, ...this.state.currentTasks];
+        this.currentTasks = [];
     }
 
     endGame() {}

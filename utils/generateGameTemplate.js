@@ -2,6 +2,10 @@ function generate(defaultOptions) {
     let results = {
         title: "Game Template",
         difficulty: 0,
+        intro: "",
+        successMessage: "You win!",
+        primaryFailureMessage: "You lose",
+        secondaryFailureMessage: "You lose",
         categories: [],
     };
     for (let index = 1; index <= 4; index++) {
@@ -18,8 +22,28 @@ function generate(defaultOptions) {
             const task = {
                 id: `${index}.${taskIndex}`,
                 title: `Task ${index}.${taskIndex}`,
-                failureScore: taskIndex % 2 === 0 ? 1 : 0,
+                action: taskIndex % 2 === 0 ? "PrimaryFailureCheck" : null,
             };
+
+            //Set default actions for Aces and Kings
+            if (taskIndex === 1) {
+                switch (index) {
+                    case 1:
+                        task.action = "StartSuccessCounter";
+                        break;
+                    case 2:
+                        task.action = "StartSuccessBonus";
+                        break;
+                    case 4:
+                        task.action = "SecondaryFailureBonus";
+                        break;
+
+                    default:
+                        break;
+                }
+            } else if (taskIndex === 2) {
+                task.action = "AddSecondaryFailureCounter";
+            }
 
             //Merge default task
             if (defaultOptions.categories) {
@@ -44,7 +68,7 @@ const partialGame = {
                 {
                     id: 1.1,
                     title: "Override",
-                    failureScore: 12,
+                    action: "CustomFunction",
                 },
             ],
         },

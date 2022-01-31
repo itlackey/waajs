@@ -1,11 +1,10 @@
 module.exports = {
-    run: (state, args) => {
-        //ToDo support arts from config
-        //console.log("Secondary failure bonus");
-        let index = state.previousTasks.findIndex(t => t.id == "4.2"); //args.id
-        if(index > -1){            
-            state.availableTasks.push(state.previousTasks[index]);
-            state.previousTasks = state.previousTasks.splice(index, 1);
+    run: (state) => {
+        let index = state.completedTasks.findIndex((t) => t.id == "4.2");
+        if (index > -1) {
+            state.secondaryFailureCounter--;
+            let task = state.completedTasks.splice(index, 1);
+            state.availableTasks.push(task);
         }
     },
 };

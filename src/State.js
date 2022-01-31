@@ -9,8 +9,9 @@ class State {
             this.primaryFailureCounter = -1;
             this.secondaryFailureCounter = -1;
             this.currentTasks = [];
-            this.previousTasks = [];
-            this.availableTasks = [];
+            this.completedTasks = [];
+            this.availableTasks = null;
+            this.journalEntries = [];
         } else {
             Object.assign(this, currentState);
         }

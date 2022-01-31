@@ -1,10 +1,10 @@
 const { d6, d20, roll } = require("./Dice");
 //ToDo: rename to "Deck"
+//ToDo: use game state for available tasks
 class TaskSelector {
     constructor(availableTasks = []) {
         this.availableTasks = availableTasks; // this.config.categories.flatMap((c) => c.tasks); //4 * 13
         this.allTasks = [...this.availableTasks];
-
     }   
     getTasksForFirstRound(difficulty) {
         let numberOfTasks = d6();

@@ -9,6 +9,8 @@ class Game {
         this.config = {};
         this.state = new State();
         this.taskSelector = null;
+        this.PrimaryFailureCheck = require("./Actions/PrimaryFailureCheck");
+        this.SuccessCheck = require('./Actions/SuccessCheck');
     }
 
     rollDice(max) {
@@ -21,18 +23,15 @@ class Game {
         else {
             this.state.currentRound = 0;
             this.state.successCounter = 0;
-            this.state.failureCounter = 100;
+            this.state.primaryFailureCounter = 100;
+            this.state.secondaryFailureCounter = 0;
         }
         const TaskSelector = require(config.taskSelector || "./TaskSelector");
         this.taskSelector = new TaskSelector(this.config.categories.flatMap((c) => c.tasks));
     }
 
-    beginRound() {
-        let result = {
-            successRoll: 0,
-            failureScore: 0,
-            currentTasks: [],
-        };
+    async beginRound() {
+        
         this.state.currentRound++;
         this.state.currentPhase = Phases.Tasks;
 
@@ -46,34 +45,32 @@ class Game {
             this.state.previousTasks = [...this.state.previousTasks, ...this.state.currentTasks];
         }
 
-        result.successRoll = this.updateSuccessCounter(result);
-
         if (this.state.successCounter === 10 || this.state.currentTasks.length === 0) {
             //Final roll before winning
-            this.state.failureCounter = this.calculateFailureScore(this.state.failureCounter, [
-                {
-                    failureScore: 1,
-                },
-            ]);
-        } else {
-            this.state.failureCounter = this.calculateFailureScore(this.state.failureCounter, this.state.currentTasks);
+            this.PrimaryFailureCheck.run(this.state);
         }
 
-        result.currentTasks = this.state.currentTasks;
+     
+        for (let index = 0; index < this.state.currentTasks.length; index++) {
+            const task = this.state.currentTasks[index];
 
-        return result;
-    }
+            if (typeof task.action === "string") {
+                try {
+                    task.action = require("./Actions/" + task.action);
+                } catch (error) {
+                    console.error(error);
+                    try {
+                        task.action = require(task.action);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }
 
-    updateSuccessCounter() {
-        if (
-            this.state.currentTasks.some((t) => t.id === "1.1") ||
-            this.state.previousTasks.some((t) => t.id === "1.1")
-        ) {
-            const result = this.rollDice(6);
-            if (result === 6) this.state.successCounter++;
-            return result;
+            if (typeof task.action === "function") task.action(this.state);
+            else if (typeof task.action === "object" && typeof task.action.run === "function")
+                task.action.run(this.state);
         }
-        return null;
     }
 
     endRound(journalEntries) {
@@ -90,29 +87,11 @@ class Game {
             const i = this.state.currentTasks.findIndex((t) => t.id === e.id);
             this.state.currentTasks[i].journalEntry = e;
         });
+       
+        this.SuccessCheck.run(this.state);
     }
 
     endGame() {}
-
-    calculateFailureScore(currentCounter, currentTasks) {
-        currentTasks
-            .filter((t) => t.failureScore > 0)
-            .forEach((t) => {
-                for (let scoreIndex = 0; scoreIndex < t.failureScore; scoreIndex++) {
-                    let score = 0;
-                    for (let diceIndex = 0; diceIndex < currentCounter; diceIndex++) {
-                        let number = this.rollDice(6);
-                        if (number === 1) {
-                            score++;
-                            if (score === currentCounter) break;
-                        }
-                    }
-                    currentCounter = currentCounter - score;
-                }
-            });
-
-        return currentCounter;
-    }
 }
 
 module.exports = Game;

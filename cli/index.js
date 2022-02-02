@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const BottomBar = require("inquirer/lib/ui/bottom-bar");
 const ui = new BottomBar({ bottomBar: "Establishing connection...\n" });
-const Game = require("./src/Game");
+const Game = require("../src/Game");
 const game = new Game();
 
 let primaryFailureIcon = "🍀";
@@ -23,11 +23,13 @@ function getStatusOutput() {
     for (let index = 0; index < game.state.secondaryFailureCounter; index++) {
         secondaryFailureMeter += secondaryFailureIcon;
     }
-    successMeter = successMeter || "😴";
+    successMeter = successMeter || "\t";
 
     let status =
-        `Progress: ${successMeter} | Luck: ${failureMeter} | Failure: ${secondaryFailureMeter} | ` +
-        `Total Actions: ${game.state.completedTasks.length} / ${game.taskSelector.allTasks.length}\n`;
+        `${game.config.cli.successCounterLabel || "Progress"}: ${successMeter} | ` +
+        `${game.config.cli.secondaryFailureLabel || "Failure"}: ${secondaryFailureMeter || "\t"} | ` +
+        `${game.config.cli.primaryFailureLabel || "Luck"}: ${failureMeter}\n`; // +
+        //`Total Actions: ${game.state.completedTasks.length} / ${game.taskSelector.allTasks.length}\n`;
 
     // status =
     //     `Progress: ${game.state.successCounter} | Luck: ${game.state.primaryFailureCounter} | Failure: ${game.state.secondaryFailureCounter} | ` +
@@ -66,12 +68,45 @@ function displayFinalOutput() {
 }
 
 async function main(gamePath) {
-    const gameConfig = require(gamePath);
+    const gameConfig = require(process.cwd() + "/" + gamePath);
 
     if (gameConfig.cli) {
         primaryFailureIcon = gameConfig.cli.primaryFailureIcon || primaryFailureIcon;
         secondaryFailureIcon = gameConfig.cli.secondaryFailureIcon || secondaryFailureIcon;
         successCounterIcon = gameConfig.cli.successCounterIcon || successCounterIcon;
+    }
+
+    if (gameConfig.safety) {
+        console.log("=============SAFTEY=============");
+        console.log(gameConfig.safety);
+        console.log("================================");
+        console.log();
+    }
+
+    if (gameConfig.who) {
+        console.log("=============WHO=============");
+        console.log(gameConfig.who);
+        console.log("================================");
+        console.log();
+    }
+
+    if (gameConfig.what) {
+        console.log("=============WHAT=============");
+        console.log(gameConfig.what);
+        console.log("================================");
+        console.log();
+    }
+
+    if (gameConfig.how) {
+        console.log("=============HOW=============");
+        console.log(gameConfig.how);
+        console.log("================================");    
+        console.log();
+    }
+
+    if(gameConfig.begin){
+        console.log(gameConfig.begin);
+        //ToDo: record first journal entry
     }
 
     await game.startGame(gameConfig);
@@ -118,4 +153,4 @@ async function main(gamePath) {
     displayFinalOutput();
 }
 
-main(process.argv[2] || "./games/ExampleGame.json");
+main(process.argv[2] || "../games/ExampleGame.json");

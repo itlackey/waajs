@@ -9,6 +9,8 @@ let successCounterIcon = "⭐";
 let secondaryFailureIcon = "👻";
 
 function getStatusOutput() {
+    if (!game.config.cli) game.config.cli = {};
+
     //console.log("");
     let failureMeter = "";
     let successMeter = "";
@@ -29,7 +31,7 @@ function getStatusOutput() {
         `${game.config.cli.successCounterLabel || "Progress"}: ${successMeter} | ` +
         `${game.config.cli.secondaryFailureLabel || "Failure"}: ${secondaryFailureMeter || "\t"} | ` +
         `${game.config.cli.primaryFailureLabel || "Luck"}: ${failureMeter}\n`; // +
-        //`Total Actions: ${game.state.completedTasks.length} / ${game.taskSelector.allTasks.length}\n`;
+    //`Total Actions: ${game.state.completedTasks.length} / ${game.taskSelector.allTasks.length}\n`;
 
     // status =
     //     `Progress: ${game.state.successCounter} | Luck: ${game.state.primaryFailureCounter} | Failure: ${game.state.secondaryFailureCounter} | ` +
@@ -100,11 +102,11 @@ async function main(gamePath) {
     if (gameConfig.how) {
         console.log("=============HOW=============");
         console.log(gameConfig.how);
-        console.log("================================");    
+        console.log("================================");
         console.log();
     }
 
-    if(gameConfig.begin){
+    if (gameConfig.begin) {
         console.log(gameConfig.begin);
         //ToDo: record first journal entry
     }
@@ -121,9 +123,10 @@ async function main(gamePath) {
         await game.beginRound();
 
         ui.updateBottomBar(getStatusOutput());
+        console.log("Day", game.state.currentRound);
         for (let index = 0; index < game.state.currentTasks.length; index++) {
             const task = game.state.currentTasks[index];
-            console.log("Task", task.id, ":", task.title);
+            console.log("  * " + task.title);
         }
 
         let entry = {};
@@ -153,4 +156,4 @@ async function main(gamePath) {
     displayFinalOutput();
 }
 
-main(process.argv[2] || "../games/ExampleGame.json");
+main(process.argv[2] || "games/ExampleGame.json");

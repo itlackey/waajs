@@ -22,7 +22,8 @@ function generate(defaultOptions) {
             const task = {
                 id: `${index}.${taskIndex}`,
                 title: `Task ${index}.${taskIndex}`,
-                action: taskIndex % 2 === 0 ? "PrimaryFailureCheck" : null,
+                action: index === 2 || index === 4
+                    || (index === 1 && taskIndex % 2 === 0) ? "PrimaryFailureCheck" : null,
             };
 
             //Set default actions for Aces and Kings

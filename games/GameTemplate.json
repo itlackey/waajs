@@ -29,17 +29,17 @@
             "tasks": [
                 { "id": "2.1", "title": "Task 2.1", "action": "StartSuccessBonus" },
                 { "id": "2.2", "title": "Task 2.2", "action": "AddSecondaryFailureCounter" },
-                { "id": "2.3", "title": "Task 2.3", "action": null },
+                { "id": "2.3", "title": "Task 2.3", "action": "PrimaryFailureCheck" },
                 { "id": "2.4", "title": "Task 2.4", "action": "PrimaryFailureCheck" },
-                { "id": "2.5", "title": "Task 2.5", "action": null },
+                { "id": "2.5", "title": "Task 2.5", "action": "PrimaryFailureCheck" },
                 { "id": "2.6", "title": "Task 2.6", "action": "PrimaryFailureCheck" },
-                { "id": "2.7", "title": "Task 2.7", "action": null },
+                { "id": "2.7", "title": "Task 2.7", "action": "PrimaryFailureCheck" },
                 { "id": "2.8", "title": "Task 2.8", "action": "PrimaryFailureCheck" },
-                { "id": "2.9", "title": "Task 2.9", "action": null },
+                { "id": "2.9", "title": "Task 2.9", "action": "PrimaryFailureCheck" },
                 { "id": "2.10", "title": "Task 2.10", "action": "PrimaryFailureCheck" },
-                { "id": "2.11", "title": "Task 2.11", "action": null },
+                { "id": "2.11", "title": "Task 2.11", "action": "PrimaryFailureCheck" },
                 { "id": "2.12", "title": "Task 2.12", "action": "PrimaryFailureCheck" },
-                { "id": "2.13", "title": "Task 2.13", "action": null }
+                { "id": "2.13", "title": "Task 2.13", "action": "PrimaryFailureCheck" }
             ]
         },
         {
@@ -48,15 +48,15 @@
                 { "id": "3.1", "title": "Task 3.1", "action": null },
                 { "id": "3.2", "title": "Task 3.2", "action": "AddSecondaryFailureCounter" },
                 { "id": "3.3", "title": "Task 3.3", "action": null },
-                { "id": "3.4", "title": "Task 3.4", "action": "PrimaryFailureCheck" },
+                { "id": "3.4", "title": "Task 3.4", "action": null },
                 { "id": "3.5", "title": "Task 3.5", "action": null },
-                { "id": "3.6", "title": "Task 3.6", "action": "PrimaryFailureCheck" },
+                { "id": "3.6", "title": "Task 3.6", "action": null },
                 { "id": "3.7", "title": "Task 3.7", "action": null },
-                { "id": "3.8", "title": "Task 3.8", "action": "PrimaryFailureCheck" },
+                { "id": "3.8", "title": "Task 3.8", "action": null },
                 { "id": "3.9", "title": "Task 3.9", "action": null },
-                { "id": "3.10", "title": "Task 3.10", "action": "PrimaryFailureCheck" },
+                { "id": "3.10", "title": "Task 3.10", "action": null },
                 { "id": "3.11", "title": "Task 3.11", "action": null },
-                { "id": "3.12", "title": "Task 3.12", "action": "PrimaryFailureCheck" },
+                { "id": "3.12", "title": "Task 3.12", "action": null },
                 { "id": "3.13", "title": "Task 3.13", "action": null }
             ]
         },
@@ -65,17 +65,17 @@
             "tasks": [
                 { "id": "4.1", "title": "Task 4.1", "action": "SecondaryFailureBonus" },
                 { "id": "4.2", "title": "Task 4.2", "action": "AddSecondaryFailureCounter" },
-                { "id": "4.3", "title": "Task 4.3", "action": null },
+                { "id": "4.3", "title": "Task 4.3", "action": "PrimaryFailureCheck" },
                 { "id": "4.4", "title": "Task 4.4", "action": "PrimaryFailureCheck" },
-                { "id": "4.5", "title": "Task 4.5", "action": null },
+                { "id": "4.5", "title": "Task 4.5", "action": "PrimaryFailureCheck" },
                 { "id": "4.6", "title": "Task 4.6", "action": "PrimaryFailureCheck" },
-                { "id": "4.7", "title": "Task 4.7", "action": null },
+                { "id": "4.7", "title": "Task 4.7", "action": "PrimaryFailureCheck" },
                 { "id": "4.8", "title": "Task 4.8", "action": "PrimaryFailureCheck" },
-                { "id": "4.9", "title": "Task 4.9", "action": null },
+                { "id": "4.9", "title": "Task 4.9", "action": "PrimaryFailureCheck" },
                 { "id": "4.10", "title": "Task 4.10", "action": "PrimaryFailureCheck" },
-                { "id": "4.11", "title": "Task 4.11", "action": null },
+                { "id": "4.11", "title": "Task 4.11", "action": "PrimaryFailureCheck" },
                 { "id": "4.12", "title": "Task 4.12", "action": "PrimaryFailureCheck" },
-                { "id": "4.13", "title": "Task 4.13", "action": null }
+                { "id": "4.13", "title": "Task 4.13", "action": "PrimaryFailureCheck" }
             ]
         }
     ]
